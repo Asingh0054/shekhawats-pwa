@@ -1,4 +1,5 @@
-name: Build Android PWA
+name: Build and Sign Android PWA
+
 on:
   push:
     branches: [ main ]
@@ -25,32 +26,39 @@ jobs:
 
       - name: Install Android SDK
         run: |
-          sudo mkdir -p /usr/local/lib/android/sdk
           sudo apt-get update
           sudo apt-get install -y wget unzip
+          mkdir -p /usr/local/lib/android/sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdtools.zip
           unzip cmdtools.zip -d /usr/local/lib/android/sdk/cmdline-tools
           mkdir -p /usr/local/lib/android/sdk/cmdline-tools/latest
           mv /usr/local/lib/android/sdk/cmdline-tools/cmdline-tools/* /usr/local/lib/android/sdk/cmdline-tools/latest/
           echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
           echo "PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
-      - name: Build APK
+      - name: Initialize and Build APK
         run: |
           bubblewrap init --manifest=https://shekhawats.lovable.app/manifest.json --skip-install --directory build
           cd build
+          # Create a debug keystore automatically
+          keytool -genkeypair -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android -dname "CN=AjayShekhawat, OU=Dev, O=Shekhawats, L=Jaipur, S=Rajasthan, C=IN" -alias key0
+          echo "storeFile=my-release-key.jks" >> signing.properties
+          echo "storePassword=android" >> signing.properties
+          echo "keyAlias=key0" >> signing.properties
+          echo "keyPassword=android" >> signing.properties
           bubblewrap build
           cd ..
           mkdir -p output
-          cp build/output/android/*.apk output/ShekhawatsApp.apk
+          cp build/output/android/*.apk output/AjayShekhawat.apk
 
-      - name: Upload APK
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: shekhawats-pwa-apk
-          path: output/ShekhawatsApp.apk
+          name: AjayShekhawat-APK
+          path: output/AjayShekhawat.apk

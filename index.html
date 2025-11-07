@@ -1,32 +1,26 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="manifest" href="/public/manifest.json">
-
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Expense Tracker - Manage Your Daily Expenses</title>
-    <meta name="description" content="Track and manage your home expenses with our intuitive expense calculator. Monitor room, kitchen, personal, and miscellaneous expenses with detailed summaries and CSV export." />
-    <meta name="author" content="Lovable" />
-
-    <meta property="og:title" content="Home Expense Tracker - Manage Your Daily Expenses" />
-    <meta property="og:description" content="Track and manage your home expenses with our intuitive expense calculator. Monitor room, kitchen, personal, and miscellaneous expenses." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Shekhawats PWA</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1e293b" />
+    <link rel="icon" href="images/icon-192x192.png" />
+    <style>
+      body {font-family: system-ui, Arial, sans-serif; margin: 2rem}
+      .ok {padding: .5rem .75rem; background: #e8fff2; border: 1px solid #b8f5cf; border-radius: 8px}
+    </style>
   </head>
-
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/public/service-worker.js");
-}
-</script>
-
+    <h1>Shekhawats PWA</h1>
+    <p class="ok">Service worker and manifest are now correctly aligned 🚀</p>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js').then(() => {
+          console.log("Service Worker registered successfully");
+        }).catch(err => console.error("SW registration failed:", err));
+      }
+    </script>
   </body>
 </html>

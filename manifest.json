@@ -1,11 +1,45 @@
 {
+  "id": "/shekhawats-pwa/",
   "name": "Shekhawats",
   "short_name": "Shekhawats",
+  "description": "Official Shekhawats Progressive Web App — fast, installable, and offline-ready.",
   "start_url": "/shekhawats-pwa/",
   "scope": "/shekhawats-pwa/",
   "display": "standalone",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
   "background_color": "#ffffff",
   "theme_color": "#1e293b",
+  "categories": ["education", "community", "tools"],
+  "note_taking": {
+    "new_note_url": "/shekhawats-pwa/",
+    "name": "Shekhawats Notes"
+  },
+  "share_target": {
+    "action": "/shekhawats-pwa/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link"
+    }
+  },
+  "screenshots": [
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
   "icons": [
     { "src": "images/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "images/icon-512x512.png", "sizes": "512x512", "type": "image/png" }

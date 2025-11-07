@@ -2,12 +2,12 @@ name: Build APK
 
 on:
   push:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: '17'
 
       - name: Install dependencies
         run: npm install -g @bubblewrap/cli
@@ -30,22 +30,26 @@ jobs:
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdtools.zip
-          unzip cmdtools.zip -d latest
+          curl -Lo cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q cmdtools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
           export ANDROID_SDK_ROOT=$HOME/android-sdk
           export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
-      - name: Build PWA into APK
+      - name: Build APK with Bubblewrap
+        env:
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+          PATH: ${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/android-sdk/platform-tools:$PATH
         run: |
-          export JAVA_HOME=$JAVA_HOME
-          export ANDROID_SDK_ROOT=$HOME/android-sdk
-          bubblewrap init --manifest=https://shekhawats.lovable.app/manifest.json --skip-install --non-interactive
-          bubblewrap build
+          bubblewrap init --manifest=https://shekhawats.lovable.app/manifest.json --skip-install --non-interactive || true
+          bubblewrap build --non-interactive --verbose
 
-      - name: Upload APK artifact
+      - name: Upload generated APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: ./output/app-release-signed.apk
+          name: generated-apk
+          path: |
+            ./*.apk
+            ./output/*.apk

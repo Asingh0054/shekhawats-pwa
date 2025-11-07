@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Shekhawats PWA</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1e293b" />
+    <link rel="icon" href="images/icon-192x192.png" />
+    <style>body{font-family:system-ui,Arial,sans-serif;margin:2rem} .ok{padding:.5rem .75rem;background:#e8fff2;border:1px solid #b8f5cf;border-radius:8px}</style>
+  </head>
+  <body>
+    <h1>Shekhawats PWA</h1>
+    <p class="ok">If you see this on GitHub Pages over HTTPS and it installs, your PWA is good to package 🚀</p>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js');
+      }
+    </script>
+  </body>
+</html>

@@ -36,12 +36,14 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-34" "build-tools;34.0.0" "platform-tools" --no_https --channel=0
 
-      - name: Build APK with Bubblewrap
-        run: |
-          npm install -g @bubblewrap/cli
-          bubblewrap init --manifest=https://shekhawats.lovable.app/manifest.json --skip-install || true
-          bubblewrap build --verbose
-
+- name: Build APK with Bubblewrap
+  run: |
+    npm install -g @bubblewrap/cli
+    yes "n" | bubblewrap init --manifest=https://shekhawats.lovable.app/manifest.json --skip-install || true
+    yes "" | bubblewrap build --verbose
+  env:
+    JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.17-10/x64
+    PATH: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.17-10/x64/bin:$PATH
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
